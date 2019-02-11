@@ -126,6 +126,33 @@ void aidinPlugin2::on_pushButton_clicked1()
           }
         }
       }
+      else if(strcmp(message1, "Cobtrajectory") == 0) {
+        message1 = strtok(NULL, s1);
+        if(strcmp(message1, "off") == 0) {
+          ros::Rate loop_rate(10);
+
+          int num = 4;
+          while(count2 < 5) {
+            rqt_aidin2::msgaidin2 msg;
+            msg.data = num;
+            rqt_aidin2_pub.publish(msg);
+            loop_rate.sleep();
+            count2++;
+          }
+        }
+        else if(strcmp(message1, "on") == 0) {
+          ros::Rate loop_rate(10);
+
+          int num = 5;
+          while(count2 < 5) {
+            rqt_aidin2::msgaidin2 msg;
+            msg.data = num;
+            rqt_aidin2_pub.publish(msg);
+            loop_rate.sleep();
+            count2++;
+          }
+        }
+      }
     }
     else {
       const char *message2 = "gnome-terminal -e 'rosrun ";
@@ -307,7 +334,9 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "command: Foottrajectory on" //msg topic command
         << "command: Foottrajectory off"
         << "command: Footprint on"
-        << "command: Footprint off";
+        << "command: Footprint off"
+        << "command: Cobtrajectory on"
+        << "command: Cobtrajectory off";
         
   model->setStringList(list);
   ui_.listView->setModel(model);
