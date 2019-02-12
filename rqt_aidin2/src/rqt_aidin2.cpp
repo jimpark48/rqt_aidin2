@@ -6,7 +6,6 @@
 #include <string.h>
 
 #include <rqt_aidin2/msgaidin2.h>
-//#include <Windows.h>
 
 namespace rqt_aidin2
 {
@@ -33,7 +32,10 @@ const char *sumstring(const char *a,const char *b) {
     return newstring;
 }
 
-int comparestring(char *long1, char *short1) {
+//compare long string and short string
+//if long string includes short string, comparestring function returns 
+//starting position value of short string in long string 
+int comparestring(const char *long1, const char *short1) {
   int i, j, count2;
   for(i=0; i<strlen(long1)-strlen(short1)+1; i++) {
     count2 = 0;
@@ -45,6 +47,7 @@ int comparestring(char *long1, char *short1) {
   return 10000;
 }
 
+//delete b string in a string
 char *minusstring(char *a, char *b) {
   int k = comparestring(a, b);
   if(k == 10000) {
@@ -61,20 +64,6 @@ char *minusstring(char *a, char *b) {
   }
 }
 
-//determine whether message1 is launch file or rosrun file
-bool stringlaunch(const char *message) {
-  int i;
-  int count = 0;
-  const char *launch = ".launch";
-  for(i=0; i<7; i++) {
-    if(message[strlen(message)-7+i] == launch[i]) {
-      count++;
-    }
-  }
-  if(count == 7) return true;
-  else return false;
-}
-
 void aidinPlugin2::on_pushButton_clicked1() 
 {
     //QString -> char* conversion
@@ -83,10 +72,11 @@ void aidinPlugin2::on_pushButton_clicked1()
 
     ROS_INFO("%s", message1);
 
-    bool value = false;
-    //determine whether message1 is launch file or rosrun file
-    value = stringlaunch(message1);
-    if(value == true) {
+    //determine whether message1 is launch file or not
+    const char *launchmsg = ".launch";
+    int value = comparestring(message1, launchmsg);
+    //if value is 10000, message1 doesn't launch file
+    if(value != 10000) {
       const char *message2 = "gnome-terminal -e 'roslaunch "; //new terminal
       const char *message3 = " --screen'";
       const char *message4 = sumstring(message2, message1);
@@ -95,6 +85,7 @@ void aidinPlugin2::on_pushButton_clicked1()
       system(message4);
 
     }
+    //if commandcount is 1, it activate command slot
     else if(commandcount == 1) {
       int count2 = 0;
       char *token = NULL;
@@ -201,27 +192,32 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
             this, SLOT(on_pushButton_3_clicked1()) );
   QObject::disconnect(ui_.listView_2, SIGNAL(clicked(const QModelIndex &)),
             this, SLOT(onClickListItem2(const QModelIndex &))   );
-
+  QObject::disconnect(ui_.pushButton_3, SIGNAL(clicked()),
+            this, SLOT(on_pushButton_3_clicked2()) );
+  //initialize listView_2
   list2 = QStringList();
   model2->setStringList(QStringList{});
   count = 0;
-  
+
+  //qstr1 means selected row name in listView
   qstr1 = QString("%1").arg(index.data().toString());
 
   //QString -> char* conversion
   QByteArray bytename = qstr1.toLocal8Bit();
   /*char **/message1 = bytename.data();
 
+  //divide message1 with s1
   char *token = NULL;
   char s1[] = " ";
   token = strtok(message1, s1);
+
   if(strcmp(token, "plot:") == 0) {
     message1 = strtok(NULL, s1);
 
     QObject::connect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked1()) );
 
-    //plot topic list setting
+    //plot topic list menu setting to listView_2
     listView2Plugin(message1);
   }
   else if(strcmp(token, "command:") == 0) {
@@ -239,29 +235,39 @@ void aidinPlugin2::onClickListItem2(const QModelIndex &index) {
   QObject::disconnect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
 
+  //if checkedcount is 0, listView_2 activates as single section mode
   if(checkedcount == 0) {
+    //qstr2 means selected row name in listView_2
     qstr2 = QString("%1").arg(index.data().toString());
     ui_.lineEdit->setText(qstr2);
   }
+  //if checkedcount is 1, listView_2 activates as multi section mode
   else if(checkedcount == 1) {
+    //qstr4 means new selected row name in listView_2
     QString qstr4 = QString("%1").arg(index.data().toString());
+    
     //QString -> char* conversion
     QByteArray bytename = qstr2.toLocal8Bit();
     char *long1 = bytename.data();
     //QString -> char* conversion
     QByteArray bytename2 = qstr4.toLocal8Bit();
     char *short1 = bytename2.data();
+
+    //when first selected
     if(strlen(long1) < strlen(short1)) {
       qstr2 = qstr4;
       ui_.lineEdit->setText(qstr2);
     }
+    //after first selection
     else {
+      //if item is selected twice, that item deletes in qstr2
       if(comparestring(long1, short1) != 10000) {
         long1 = minusstring(long1, short1);
         //char* -> QString conversion
         qstr2 = QString::fromLocal8Bit(long1);
         ui_.lineEdit->setText(qstr2);
       }
+      //if item is selected once, that item adds in qstr2
       else {
         QString qstr3 = " ";
         qstr2 = qstr2 + qstr3 + qstr4;
@@ -273,10 +279,12 @@ void aidinPlugin2::onClickListItem2(const QModelIndex &index) {
             this, SLOT(on_pushButton_3_clicked2()) );
 }
 
+//checkbox function
 void aidinPlugin2::onChecked(bool checked) {
   if(checked == true) {
     ui_.listView_2->setSelectionMode(QAbstractItemView::MultiSelection);
     
+    //to cancel highlight, initialize listView_2
     list2 = QStringList();
     model2->setStringList(QStringList{});
     ui_.listView_2->setModel(model2);
@@ -290,7 +298,7 @@ void aidinPlugin2::onChecked(bool checked) {
     message1 = strtok(NULL, s1);
 
     listView2Plugin(message1);
-
+    //initialize qstr2
     qstr2 = "";
     checkedcount = 1;
   }
@@ -332,6 +340,7 @@ void alphasumstring(int sum, const char *mesg) {
   }
 }
 
+//create detailed topics list of selected main topic in listView_2
 void aidinPlugin2::listView2Plugin(const char* message) {
   //'malloc' function is too often used
   //char *plotstring = (char*)malloc(strlen(message)+2);
@@ -363,6 +372,7 @@ void aidinPlugin2::listView2Plugin(const char* message) {
             this, SLOT(onClickListItem2(const QModelIndex &))   );
 }
 
+//plot button function1, when listView item selected
 void aidinPlugin2::on_pushButton_3_clicked1() {
   //QString -> char* conversion
   QByteArray bytename = qstr1.toLocal8Bit();
@@ -383,6 +393,7 @@ void aidinPlugin2::on_pushButton_3_clicked1() {
   system(message4);
 }
 
+//plot button function2, when listView_2 item selected
 void aidinPlugin2::on_pushButton_3_clicked2() {
   //QString -> char* conversion
   QByteArray bytename = qstr2.toLocal8Bit();
@@ -397,6 +408,7 @@ void aidinPlugin2::on_pushButton_3_clicked2() {
   system(message4);
 }
 
+//set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
     QObject::connect(ui_.pushButton, SIGNAL(clicked()),
