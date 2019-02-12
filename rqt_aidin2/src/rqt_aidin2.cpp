@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include <rqt_aidin2/msgaidin2.h>
+//#include <Windows.h>
 
 namespace rqt_aidin2
 {
@@ -20,7 +21,7 @@ aidinPlugin2::aidinPlugin2()
 }
 
 //sum two strings
-const char *sumstring(const char *a,const char *b){
+const char *sumstring(const char *a,const char *b) {
     int i,j;
     char *newstring;
     newstring=(char*)malloc(strlen(a)+strlen(b));
@@ -30,6 +31,34 @@ const char *sumstring(const char *a,const char *b){
       newstring[i+j]=b[j];
     newstring[i+j]='\0';
     return newstring;
+}
+
+int comparestring(char *long1, char *short1) {
+  int i, j, count2;
+  for(i=0; i<strlen(long1)-strlen(short1)+1; i++) {
+    count2 = 0;
+    for(j=0; j<strlen(short1); j++) {
+      if(long1[i+j] == short1[j]) count2++;
+    }
+    if(count2 == strlen(short1)) return i;
+  }
+  return 10000;
+}
+
+char *minusstring(char *a, char *b) {
+  int k = comparestring(a, b);
+  if(k == 10000) {
+    return a;
+  }
+  else {
+    int i=k;
+    while(a[i+strlen(b)] != '\0') {
+      a[i] = a[i+strlen(b)+1];
+      i++;
+    }
+    a[i] = '\0';
+    return a;
+  }
 }
 
 //determine whether message1 is launch file or rosrun file
@@ -49,7 +78,7 @@ bool stringlaunch(const char *message) {
 void aidinPlugin2::on_pushButton_clicked1() 
 {
     //QString -> char* conversion
-    QByteArray bytename = qstr2.toLocal8Bit();
+    QByteArray bytename = qstr1.toLocal8Bit();
     char *message1 = bytename.data();
 
     ROS_INFO("%s", message1);
@@ -177,10 +206,10 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
   model2->setStringList(QStringList{});
   count = 0;
   
-  qstr2 = QString("%1").arg(index.data().toString());
+  qstr1 = QString("%1").arg(index.data().toString());
 
   //QString -> char* conversion
-  QByteArray bytename = qstr2.toLocal8Bit();
+  QByteArray bytename = qstr1.toLocal8Bit();
   /*char **/message1 = bytename.data();
 
   char *token = NULL;
@@ -198,8 +227,6 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
   else if(strcmp(token, "command:") == 0) {
     message1 = strtok(NULL, s1);
     commandcount = 1;
-    //ROS_INFO("count1");
-    //ROS_INFO("%d", count);
   }
 
   QObject::connect(ui_.pushButton, SIGNAL(clicked()),
@@ -212,11 +239,83 @@ void aidinPlugin2::onClickListItem2(const QModelIndex &index) {
   QObject::disconnect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
 
-  qstr2 = QString("%1").arg(index.data().toString());
-
+  if(checkedcount == 0) {
+    qstr2 = QString("%1").arg(index.data().toString());
+    ui_.lineEdit->setText(qstr2);
+  }
+  else if(checkedcount == 1) {
+    QString qstr4 = QString("%1").arg(index.data().toString());
+    //QString -> char* conversion
+    QByteArray bytename = qstr2.toLocal8Bit();
+    char *long1 = bytename.data();
+    //QString -> char* conversion
+    QByteArray bytename2 = qstr4.toLocal8Bit();
+    char *short1 = bytename2.data();
+    if(strlen(long1) < strlen(short1)) {
+      qstr2 = qstr4;
+      ui_.lineEdit->setText(qstr2);
+    }
+    else {
+      if(comparestring(long1, short1) != 10000) {
+        long1 = minusstring(long1, short1);
+        //char* -> QString conversion
+        qstr2 = QString::fromLocal8Bit(long1);
+        ui_.lineEdit->setText(qstr2);
+      }
+      else {
+        QString qstr3 = " ";
+        qstr2 = qstr2 + qstr3 + qstr4;
+        ui_.lineEdit->setText(qstr2);
+      }
+    }
+  }
   QObject::connect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
 }
+
+void aidinPlugin2::onChecked(bool checked) {
+  if(checked == true) {
+    ui_.listView_2->setSelectionMode(QAbstractItemView::MultiSelection);
+    
+    list2 = QStringList();
+    model2->setStringList(QStringList{});
+    ui_.listView_2->setModel(model2);
+
+    //QString -> char* conversion
+    QByteArray bytename = qstr1.toLocal8Bit();
+    /*char **/message1 = bytename.data();
+    char *token = NULL;
+    char s1[] = " ";
+    token = strtok(message1, s1);
+    message1 = strtok(NULL, s1);
+
+    listView2Plugin(message1);
+
+    qstr2 = "";
+    checkedcount = 1;
+  }
+  else if(checked == false) {
+    ui_.listView_2->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    list2 = QStringList();
+    model2->setStringList(QStringList{});
+    ui_.listView_2->setModel(model2);
+
+    //QString -> char* conversion
+    QByteArray bytename = qstr1.toLocal8Bit();
+    /*char **/message1 = bytename.data();
+    char *token = NULL;
+    char s1[] = " ";
+    token = strtok(message1, s1);
+    message1 = strtok(NULL, s1);
+
+    listView2Plugin(message1);
+
+    qstr2 = "";
+    checkedcount = 0;
+  }
+}
+
 //add topics of mesg to list2 
 void alphasumstring(int sum, const char *mesg) {
   const char *ram = "/";
@@ -257,13 +356,16 @@ void aidinPlugin2::listView2Plugin(const char* message) {
     ui_.listView_2->setModel(model2);
   }
 
+  QObject::disconnect(ui_.listView_2, SIGNAL(clicked(const QModelIndex &)),
+            this, SLOT(onClickListItem2(const QModelIndex &))   );
+
   QObject::connect(ui_.listView_2, SIGNAL(clicked(const QModelIndex &)),
             this, SLOT(onClickListItem2(const QModelIndex &))   );
 }
 
 void aidinPlugin2::on_pushButton_3_clicked1() {
   //QString -> char* conversion
-  QByteArray bytename = qstr2.toLocal8Bit();
+  QByteArray bytename = qstr1.toLocal8Bit();
   /*char **/message1 = bytename.data();
 
   //string is divided
@@ -303,6 +405,8 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(onClickListItem(const QModelIndex &))  );
     QObject::connect(ui_.pushButton_2, SIGNAL(clicked()),
             this, SLOT(on_pushButton_2_clicked1())  );
+    QObject::connect(ui_.checkBox, SIGNAL(toggled(bool )),
+            this, SLOT(onChecked(bool ))  );
     //"this" means source code, and in this case, it means "aidinPlugin".
 }
 
