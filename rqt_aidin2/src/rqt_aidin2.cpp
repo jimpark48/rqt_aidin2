@@ -364,6 +364,11 @@ void aidinPlugin2::listView2Plugin(const char* message) {
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
+  else if(strcmp(message, "/aidinvi_contact") == 0) {
+    alphasumstring(4, message);
+    model2->setStringList(list2);
+    ui_.listView_2->setModel(model2);
+  }
 
   QObject::disconnect(ui_.listView_2, SIGNAL(clicked(const QModelIndex &)),
             this, SLOT(onClickListItem2(const QModelIndex &))   );
@@ -446,6 +451,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "plot: /aidinvi_actp"
         << "plot: /gazebo/aidinvi_jointt"
         << "plot: /aidinvi_actt"
+        << "plot: /aidinvi_contact"
         << "rqt_gui_test rqt_gui_test_subscriber"
         << "command: Foottrajectory on" //msg topic command
         << "command: Foottrajectory off"
