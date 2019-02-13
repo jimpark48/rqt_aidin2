@@ -15,8 +15,6 @@
 #include <QStringList>
 #include <QStringListModel>
 
-//#include <QMessageBox>
-
 namespace rqt_aidin2
 {
 
@@ -48,8 +46,6 @@ private:
   QStringListModel* model;
   QStringListModel* model2;
 
-  //ros function
-  //ros::init(argc, argv, "rqt_aidin2")
   ros::NodeHandle nh;
   ros::Publisher rqt_aidin2_pub;
   ros::Publisher test_pub;
@@ -58,7 +54,6 @@ private:
     void clicked();
     void clicked(const QString &qstr2);
     void clicked(const QModelIndex &index);
-    //void pressed(const QModelIndex &index);
     void toggled(bool checked);
 private slots:
   void on_pushButton_clicked1(); //반드시 slots 안에 정의할 것
@@ -67,17 +62,7 @@ private slots:
   void on_pushButton_2_clicked1();
   void on_pushButton_3_clicked1();
   void on_pushButton_3_clicked2();
-  //void onRightClickListItem(const QPoint &pos);
-  //void onPressedListItem(const QModelIndex &index);
   void onChecked(bool checked);
 };
-  static QString qstr1;
-  static QString qstr2;
-  static QStringList list2;
-  static char *message1;
-  static char *plotstring = (char*)malloc(30);
-  static int commandcount;
-  static int count;
-  static int checkedcount;
 }  // namespace rqt_aidin2
 #endif  // RQT_AIDIN_RQT_AIDIN2_H

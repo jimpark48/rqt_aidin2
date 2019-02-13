@@ -202,7 +202,7 @@ if("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
 else()
   target_link_libraries(${PROJECT_NAME} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 endif()
-
+add_dependencies(${PROJECT_NAME} rqt_aidin2_generate_messages_cpp)
 #############
 ## Install ##
 #############
