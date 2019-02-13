@@ -19,6 +19,16 @@ aidinPlugin2::aidinPlugin2()
   setObjectName("aidinPlugin2");
 }
 
+//global variables
+static QString qstr1;
+static QString qstr2;
+static QStringList list2;
+static char *message1;
+static char *plotstring = (char*)malloc(30);
+static int commandcount;
+static int count;
+static int checkedcount;
+
 //sum two strings
 const char *sumstring(const char *a,const char *b) {
     int i,j;
