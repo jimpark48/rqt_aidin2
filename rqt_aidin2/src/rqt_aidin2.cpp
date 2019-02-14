@@ -89,7 +89,7 @@ void aidinPlugin2::on_pushButton_clicked1()
     if(value != 10000) {
       const char *message2 = "gnome-terminal -e 'roslaunch "; //new terminal
       //const char *message3 = " --screen'";
-      const char *message3 = " '";
+      const char *message3 = "'";
       const char *message4 = sumstring(message2, message1);
       message4 = sumstring(message4, message3);
       ROS_INFO("%s", message4);
