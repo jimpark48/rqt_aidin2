@@ -88,8 +88,8 @@ void aidinPlugin2::on_pushButton_clicked1()
     //if value is 10000, message1 doesn't launch file
     if(value != 10000) {
       const char *message2 = "gnome-terminal -e 'roslaunch "; //new terminal
-      //const char *message3 = " --screen'";
-      const char *message3 = "'";
+      const char *message3 = " --screen'";
+      //const char *message3 = "'";
       const char *message4 = sumstring(message2, message1);
       message4 = sumstring(message4, message3);
       ROS_INFO("%s", message4);
@@ -370,6 +370,11 @@ void aidinPlugin2::listView2Plugin(const char* message) {
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
+  else if(strcmp(message, "/aidinvi_actrawt") == 0) {
+    alphasumstring(12, message);
+    model2->setStringList(list2);
+    ui_.listView_2->setModel(model2);
+  }
   else if(strcmp(message, "/aidinvi_actt") == 0) {
     alphasumstring(12, message);
     model2->setStringList(list2);
@@ -461,6 +466,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "plot: /gazebo/aidinvi_footpos"
         << "plot: /aidinvi_actp"
         << "plot: /gazebo/aidinvi_jointt"
+        << "plot: /aidinvi_actrawt"
         << "plot: /aidinvi_actt"
         << "plot: /aidinvi_contact"
         << "rqt_gui_test rqt_gui_test_subscriber"
