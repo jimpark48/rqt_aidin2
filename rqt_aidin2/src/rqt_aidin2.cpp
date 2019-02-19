@@ -103,7 +103,7 @@ void aidinPlugin2::on_pushButton_clicked1()
       char s1[] = " ";
       token = strtok(message1, s1);
       message1 = strtok(NULL, s1);
-      if(strcmp(message1, "Foottrajectory") == 1) {
+      if(strcmp(message1, "Foottrajectory") == 0) {
           ros::Rate loop_rate(10);
 
           int num = 1;
