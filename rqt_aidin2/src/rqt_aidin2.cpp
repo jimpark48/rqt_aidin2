@@ -103,20 +103,6 @@ void aidinPlugin2::on_pushButton_clicked1()
       token = strtok(message1, s1);
       message1 = strtok(NULL, s1);
       if(strcmp(message1, "Foottrajectory") == 0) {
-        message1 = strtok(NULL, s1);
-        if(strcmp(message1, "off") == 0) {
-          ros::Rate loop_rate(10);
-
-          int num = 0;
-          while(count2 < 5) {
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
-        }
-        else if(strcmp(message1, "on") == 0){
           ros::Rate loop_rate(10);
 
           int num = 1;
@@ -127,23 +113,8 @@ void aidinPlugin2::on_pushButton_clicked1()
             loop_rate.sleep();
             count2++;
           }
-        }
       }
       else if(strcmp(message1, "Footprint") == 0) {
-        message1 = strtok(NULL, s1);
-        if(strcmp(message1, "off") == 0) {
-          ros::Rate loop_rate(10);
-
-          int num = 2;
-          while(count2 < 5) {
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
-        }
-        else if(strcmp(message1, "on") == 0) {
           ros::Rate loop_rate(10);
 
           int num = 3;
@@ -154,23 +125,8 @@ void aidinPlugin2::on_pushButton_clicked1()
             loop_rate.sleep();
             count2++;
           }
-        }
       }
       else if(strcmp(message1, "Cobtrajectory") == 0) {
-        message1 = strtok(NULL, s1);
-        if(strcmp(message1, "off") == 0) {
-          ros::Rate loop_rate(10);
-
-          int num = 4;
-          while(count2 < 5) {
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
-        }
-        else if(strcmp(message1, "on") == 0) {
           ros::Rate loop_rate(10);
 
           int num = 5;
@@ -181,7 +137,6 @@ void aidinPlugin2::on_pushButton_clicked1()
             loop_rate.sleep();
             count2++;
           }
-        }
       }
     }
     else {
@@ -194,6 +149,64 @@ void aidinPlugin2::on_pushButton_clicked1()
     }
 }
 
+void aidinPlugin2::on_pushButton_2_clicked1()
+{
+  //QString -> char* conversion
+  QByteArray bytename = qstr1.toLocal8Bit();
+  char *message1 = bytename.data();
+
+  int count2 = 0;
+  char *token = NULL;
+  char s1[] = " ";
+  token = strtok(message1, s1);
+  message1 = strtok(NULL, s1);
+
+  ROS_INFO("%s", message1);
+
+  if(commandcount == 1) {
+    ROS_INFO("%d", commandcount);
+    ROS_INFO("%s", message1);
+    if(strcmp(message1, "Foottrajectory") == 0) {
+      ros::Rate loop_rate(10);
+
+      ROS_INFO("off");
+
+      int num = 0;
+      while(count2 < 5) {
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
+        rqt_aidin2_pub.publish(msg);
+        loop_rate.sleep();
+        count2++;
+      }
+    }
+    else if(strcmp(message1, "Footprint") == 0) {
+      ros::Rate loop_rate(10);
+
+      int num = 2;
+      while(count2 < 5) {
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
+        rqt_aidin2_pub.publish(msg);
+        loop_rate.sleep();
+        count2++;
+      }
+    }
+    else if(strcmp(message1, "Cobtrajectory") == 0) {
+      ros::Rate loop_rate(10);
+
+      int num = 4;
+      while(count2 < 5) {
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
+        rqt_aidin2_pub.publish(msg);
+        loop_rate.sleep();
+        count2++;
+      }
+    }
+  }
+}
+
 void aidinPlugin2::onClickListItem(const QModelIndex &index)
 {
   QObject::disconnect(ui_.pushButton, SIGNAL(clicked()),
@@ -204,6 +217,8 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
             this, SLOT(onClickListItem2(const QModelIndex &))   );
   QObject::disconnect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
+  QObject::disconnect(ui_.pushButton_2, SIGNAL(clicked()),
+            this, SLOT(on_pushButton_2_clicked1())  );
   //initialize listView_2
   list2 = QStringList();
   model2->setStringList(QStringList{});
@@ -233,6 +248,9 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
   else if(strcmp(token, "command:") == 0) {
     message1 = strtok(NULL, s1);
     commandcount = 1;
+
+    QObject::connect(ui_.pushButton_2, SIGNAL(clicked()),
+              this, SLOT(on_pushButton_2_clicked1()) );
   }
 
   QObject::connect(ui_.pushButton, SIGNAL(clicked()),
@@ -451,7 +469,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
 
   // add menu to the listview
-  model = new QStringListModel(this); //dynamic momories allocates
+  model = new QStringListModel(this); //dynamic memories allocates
   QStringList list; //
   list  << "eigentransmit eigentransmit.launch" 
         << "rqt_gui_test rqt_gui_test_publisher" 
@@ -463,12 +481,9 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "plot: /aidinvi_actt"
         << "plot: /aidinvi_contact"
         << "rqt_gui_test rqt_gui_test_subscriber"
-        << "command: Foottrajectory on" //msg topic command
-        << "command: Foottrajectory off"
-        << "command: Footprint on"
-        << "command: Footprint off"
-        << "command: Cobtrajectory on"
-        << "command: Cobtrajectory off";
+        << "command: Foottrajectory" //msg topic command
+        << "command: Footprint"
+        << "command: Cobtrajectory";
         
   model->setStringList(list);
   ui_.listView->setModel(model);
@@ -506,6 +521,6 @@ void triggerConfiguration()
   // Usually used to open a dialog to offer the user a set of configuration
 }*/
 
-}  // namespace rqt_test
+}  // namespace rqt_aidin2
 
 PLUGINLIB_EXPORT_CLASS(rqt_aidin2::aidinPlugin2, rqt_gui_cpp::Plugin)
