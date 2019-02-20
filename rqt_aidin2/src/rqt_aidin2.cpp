@@ -150,6 +150,46 @@ void aidinPlugin2::on_pushButton_clicked1()
     }
 }
 
+void aidinPlugin2::on_pushButton_clicked2() 
+{
+  //QString -> char* conversion
+  QByteArray bytename = qstr2.toLocal8Bit();
+  char *message1 = bytename.data();
+
+  ROS_INFO("%s", message1);
+
+  int count2 = 0;
+
+  if(strcmp(message1, "walk") == 0) {      
+    ros::Rate loop_rate(10);
+
+    int num = 1;
+    while(count2 < 5) {
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      //msg.a = 1.0;
+      //msg.b = 0.6
+      gait_pub.publish(msg);
+      loop_rate.sleep();
+      count2++;
+    }
+  }
+  else if(strcmp(message1, "trot") == 0) {
+    ros::Rate loop_rate(10);
+
+    int num = 2;
+    while(count2 < 5) {
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      //msg.a = 0.2;
+      //msg.b = 0.2;
+      gait_pub.publish(msg);
+      loop_rate.sleep();
+      count2++;
+    }
+  }
+}
+
 void aidinPlugin2::on_pushButton_2_clicked1()
 {
   //QString -> char* conversion
@@ -252,6 +292,8 @@ void aidinPlugin2::onClickListItem(const QModelIndex &index)
 
     QObject::connect(ui_.pushButton_2, SIGNAL(clicked()),
               this, SLOT(on_pushButton_2_clicked1()) );
+
+    listView2Plugin(message1);
   }
 
   QObject::connect(ui_.pushButton, SIGNAL(clicked()),
@@ -263,6 +305,8 @@ void aidinPlugin2::onClickListItem2(const QModelIndex &index) {
             this, SLOT(on_pushButton_3_clicked1()) );
   QObject::disconnect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
+  QObject::disconnect(ui_.pushButton, SIGNAL(clicked()),
+            this, SLOT(on_pushButton_clicked2()) );
 
   //if checkedcount is 0, listView_2 activates as single section mode
   if(checkedcount == 0) {
@@ -306,6 +350,10 @@ void aidinPlugin2::onClickListItem2(const QModelIndex &index) {
   }
   QObject::connect(ui_.pushButton_3, SIGNAL(clicked()),
             this, SLOT(on_pushButton_3_clicked2()) );
+  if(commandcount == 1) {
+      QObject::connect(ui_.pushButton, SIGNAL(clicked()),
+                this, SLOT(on_pushButton_clicked2()) );
+  }
 }
 
 //checkbox function
@@ -403,6 +451,12 @@ void aidinPlugin2::listView2Plugin(const char* message) {
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
+  else if(strcmp(message, "gait") == 0) {
+    list2 << "walk"
+          << "trot";
+    model2->setStringList(list2);
+    ui_.listView_2->setModel(model2);
+  }
 
   QObject::disconnect(ui_.listView_2, SIGNAL(clicked(const QModelIndex &)),
             this, SLOT(onClickListItem2(const QModelIndex &))   );
@@ -447,6 +501,10 @@ void aidinPlugin2::on_pushButton_3_clicked2() {
   system(message4);
 }
 
+void aidinPlugin2::on_quitButton_clicked() {
+  exit(0);
+}
+
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -458,6 +516,8 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(on_pushButton_2_clicked1())  );
     QObject::connect(ui_.checkBox, SIGNAL(toggled(bool )),
             this, SLOT(onChecked(bool ))  );
+    QObject::connect(ui_.pushButton_4, SIGNAL(clicked()),
+            this, SLOT(on_quitButton_clicked())  );
     //"this" means source code, and in this case, it means "aidinPlugin".
 }
 
@@ -473,6 +533,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   context.addWidget(widget_);
 
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
+  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("gaitcommand", 1);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
@@ -490,7 +551,8 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "rqt_gui_test rqt_gui_test_subscriber"
         << "command: Foottrajectory" //msg topic command
         << "command: Footprint"
-        << "command: Cobtrajectory";
+        << "command: Cobtrajectory"
+        << "command: gait";
         
   model->setStringList(list);
   ui_.listView->setModel(model);
