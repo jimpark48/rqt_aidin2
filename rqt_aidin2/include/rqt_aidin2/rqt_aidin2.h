@@ -49,6 +49,7 @@ private:
   ros::NodeHandle nh;
   ros::Publisher rqt_aidin2_pub;
   ros::Publisher test_pub;
+  ros::Publisher gait_pub;
 
   Q_SIGNALS:
     void clicked();
@@ -57,12 +58,14 @@ private:
     void toggled(bool checked);
 private slots:
   void on_pushButton_clicked1(); //반드시 slots 안에 정의할 것
+  void on_pushButton_clicked2();
   void onClickListItem(const QModelIndex &index);
   void onClickListItem2(const QModelIndex &index);
   void on_pushButton_2_clicked1();
   void on_pushButton_3_clicked1();
   void on_pushButton_3_clicked2();
   void onChecked(bool checked);
+  void on_quitButton_clicked();
 };
 }  // namespace rqt_aidin2
 #endif  // RQT_AIDIN_RQT_AIDIN2_H
