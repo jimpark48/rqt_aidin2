@@ -92,13 +92,13 @@ void aidinPlugin2::on_pushButton_clicked1()
       //const char *message3 = "'";
       const char *message4 = sumstring(message2, message1);
       message4 = sumstring(message4, message3);
-      ROS_INFO("%s", message4);
+      //ROS_INFO("%s", message4);
       system(message4);
 
     }
     //if commandcount is 1, it activate command slot
     else if(commandcount == 1) {
-      int count2 = 0;
+      //int count2 = 0;
       char *token = NULL;
       char s1[] = " ";
       token = strtok(message1, s1);
@@ -107,37 +107,43 @@ void aidinPlugin2::on_pushButton_clicked1()
           ros::Rate loop_rate(10);
 
           int num = 1;
-          while(count2 < 5) {
+          //while(count2 < 5) {
+            //ROS_INFO("%s", message1);
+            ROS_INFO("on");
             rqt_aidin2::msgaidin2 msg;
             msg.data = num;
             rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
+         //   loop_rate.sleep();
+          //  count2++;
+          //}
       }
       else if(strcmp(message1, "Footprint") == 0) {
           ros::Rate loop_rate(10);
 
           int num = 3;
-          while(count2 < 5) {
+          //while(count2 < 5) {
+            //ROS_INFO("%s", message1);
+            ROS_INFO("on");
             rqt_aidin2::msgaidin2 msg;
             msg.data = num;
             rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
+          //  loop_rate.sleep();
+          //  count2++;
+          //}
       }
       else if(strcmp(message1, "Cobtrajectory") == 0) {
           ros::Rate loop_rate(10);
 
           int num = 5;
-          while(count2 < 5) {
+          //while(count2 < 5) {
+            //ROS_INFO("%s", message1);
+            ROS_INFO("on");
             rqt_aidin2::msgaidin2 msg;
             msg.data = num;
             rqt_aidin2_pub.publish(msg);
-            loop_rate.sleep();
-            count2++;
-          }
+          //  loop_rate.sleep();
+           // count2++;
+          //}
       }
     }
     else {
@@ -145,7 +151,7 @@ void aidinPlugin2::on_pushButton_clicked1()
       const char *message3 = "'";
       const char *message4 = sumstring(message2, message1);
       message4 = sumstring(message4, message3);
-      ROS_INFO("%s", message4);
+      //ROS_INFO("%s", message4);
       system(message4);
     }
 }
@@ -156,37 +162,39 @@ void aidinPlugin2::on_pushButton_clicked2()
   QByteArray bytename = qstr2.toLocal8Bit();
   char *message1 = bytename.data();
 
-  ROS_INFO("%s", message1);
+  //ROS_INFO("%s", message1);
 
-  int count2 = 0;
+  //int count2 = 0;
 
   if(strcmp(message1, "walk") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 1;
-    while(count2 < 5) {
+   // while(count2 < 5) {
+      ROS_INFO("%s", message1);
       rqt_aidin2::msgaidin2 msg;
       msg.data = num;
       //msg.a = 1.0;
       //msg.b = 0.6
       gait_pub.publish(msg);
-      loop_rate.sleep();
-      count2++;
-    }
+    //  loop_rate.sleep();
+    //  count2++;
+    //}
   }
   else if(strcmp(message1, "trot") == 0) {
     ros::Rate loop_rate(10);
 
     int num = 2;
-    while(count2 < 5) {
+    //while(count2 < 5) {
+      ROS_INFO("%s", message1);
       rqt_aidin2::msgaidin2 msg;
       msg.data = num;
       //msg.a = 0.2;
       //msg.b = 0.2;
       gait_pub.publish(msg);
-      loop_rate.sleep();
-      count2++;
-    }
+     // loop_rate.sleep();
+    //  count2++;
+    //}
   }
 }
 
@@ -196,16 +204,16 @@ void aidinPlugin2::on_pushButton_2_clicked1()
   QByteArray bytename = qstr1.toLocal8Bit();
   char *message1 = bytename.data();
 
-  int count2 = 0;
+  //int count2 = 0;
   char *token = NULL;
   char s1[] = " ";
   token = strtok(message1, s1);
   message1 = strtok(NULL, s1);
 
-  ROS_INFO("%s", message1);
+  //ROS_INFO("%s", message1);
 
   if(commandcount == 1) {
-    ROS_INFO("%d", commandcount);
+    //ROS_INFO("%d", commandcount);
     ROS_INFO("%s", message1);
     if(strcmp(message1, "Foottrajectory") == 0) {
       ros::Rate loop_rate(10);
@@ -213,37 +221,42 @@ void aidinPlugin2::on_pushButton_2_clicked1()
       ROS_INFO("off");
 
       int num = 0;
-      while(count2 < 5) {
+      //while(count2 < 5) {
+        //ROS_INFO("%s", message1);
         rqt_aidin2::msgaidin2 msg;
         msg.data = num;
         rqt_aidin2_pub.publish(msg);
-        loop_rate.sleep();
-        count2++;
-      }
+      //  loop_rate.sleep();
+      //  count2++;
+      //}
     }
     else if(strcmp(message1, "Footprint") == 0) {
       ros::Rate loop_rate(10);
 
+      ROS_INFO("off");
+
       int num = 2;
-      while(count2 < 5) {
+      //while(count2 < 5) {
         rqt_aidin2::msgaidin2 msg;
         msg.data = num;
         rqt_aidin2_pub.publish(msg);
-        loop_rate.sleep();
-        count2++;
-      }
+     //   loop_rate.sleep();
+      //  count2++;
+      //}
     }
     else if(strcmp(message1, "Cobtrajectory") == 0) {
       ros::Rate loop_rate(10);
 
+      ROS_INFO("off");
+
       int num = 4;
-      while(count2 < 5) {
+     // while(count2 < 5) {
         rqt_aidin2::msgaidin2 msg;
         msg.data = num;
         rqt_aidin2_pub.publish(msg);
-        loop_rate.sleep();
-        count2++;
-      }
+     //   loop_rate.sleep();
+      //  count2++;
+     // }
     }
   }
 }
@@ -505,6 +518,24 @@ void aidinPlugin2::on_quitButton_clicked() {
   exit(0);
 }
 
+void aidinPlugin2::on_enterButton_clicked() {
+  QString qstr_x = ui_.lineEdit_2->text();
+  double goal_x = qstr_x.toDouble();
+  QString qstr_y = ui_.lineEdit_3->text();
+  double goal_y = qstr_y.toDouble();
+  QString qstr_z = ui_.lineEdit_4->text();
+  double goal_z = qstr_z.toDouble();
+
+  rqt_aidin2::msgaidin2 msggoal;
+  msggoal.x = goal_x;
+  msggoal.y = goal_y;
+  msggoal.z = goal_z;
+
+  ROS_INFO("goal : %f %f %f", goal_x, goal_y, goal_z);
+
+  goal_pub.publish(msggoal);
+}
+
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -518,6 +549,8 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(onChecked(bool ))  );
     QObject::connect(ui_.pushButton_4, SIGNAL(clicked()),
             this, SLOT(on_quitButton_clicked())  );
+    QObject::connect(ui_.pushButton_5, SIGNAL(clicked()),
+            this, SLOT(on_enterButton_clicked())  );
     //"this" means source code, and in this case, it means "aidinPlugin".
 }
 
@@ -534,6 +567,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
 
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("gaitcommand", 1);
+  goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("goalcommand", 4);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
