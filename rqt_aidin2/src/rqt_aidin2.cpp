@@ -168,7 +168,22 @@ void aidinPlugin2::on_pushButton_clicked2()
 
   //int count2 = 0;
 
-  if(strcmp(message1, "walk") == 0) {      
+  if(strcmp(message1, "Idle") == 0) {      
+    ros::Rate loop_rate(10);
+
+    int num = 0;
+   // while(count2 < 5) {
+      ROS_INFO("%s", message1);
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      //msg.a = 1.0;
+      //msg.b = 0.6
+      gait_pub.publish(msg);
+    //  loop_rate.sleep();
+    //  count2++;
+    //}
+  }
+  if(strcmp(message1, "Walk") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 1;
@@ -183,7 +198,7 @@ void aidinPlugin2::on_pushButton_clicked2()
     //  count2++;
     //}
   }
-  else if(strcmp(message1, "trot") == 0) {
+  else if(strcmp(message1, "Trot") == 0) {
     ros::Rate loop_rate(10);
 
     int num = 2;
@@ -474,8 +489,9 @@ void aidinPlugin2::listView2Plugin(const char* message) {
     ui_.listView_2->setModel(model2);
   }
   else if(strcmp(message, "gait") == 0) {
-    list2 << "walk"
-          << "trot";
+    list2 << "Idle"
+          << "Walk"
+          << "Trot";
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
@@ -593,9 +609,9 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   context.addWidget(widget_);
 
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
-  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("gaitcommand", 1);
-  goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("goalcommand", 4);
-  do_pub = nh.advertise<rqt_aidin2::msgaidin2>("docommand", 4);
+  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
+  goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoal", 4);
+  do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
@@ -604,6 +620,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "rqt_gui_test rqt_gui_test_publisher" 
         << "aidinvi walking_vis.launch"
         << "rviz rviz" //set the menu list
+        << "command: gait"
         << "plot: /gazebo/aidinvi_footpos"
         << "plot: /aidinvi_actp"
         << "plot: /gazebo/aidinvi_jointt"
@@ -614,8 +631,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
         << "command: Foottrajectory" //msg topic command
         << "command: Footprint"
         << "command: Cobtrajectory"
-        << "command: gait";
-        
+        ;
   model->setStringList(list);
   ui_.listView->setModel(model);
 
