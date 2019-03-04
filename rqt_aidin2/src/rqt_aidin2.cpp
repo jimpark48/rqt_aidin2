@@ -29,6 +29,8 @@ static int commandcount;
 static int count;
 static int checkedcount;
 
+bool autoOn = false;//YH
+
 //sum two strings
 const char *sumstring(const char *a,const char *b) {
     int i,j;
@@ -413,7 +415,14 @@ void aidinPlugin2::onChecked(bool checked) {
     checkedcount = 0;
   }
 }
-
+void aidinPlugin2::onChecked_2(bool checked) {
+  if(checked == true) {
+    autoOn = true;
+  }
+  else if(checked == false) {
+    autoOn = false;
+  }
+}
 //add topics of mesg to list2 
 void alphasumstring(int sum, const char *mesg) {
   const char *ram = "/";
@@ -535,7 +544,20 @@ void aidinPlugin2::on_enterButton_clicked() {
 
   goal_pub.publish(msggoal);
 }
+void aidinPlugin2::on_doButton_clicked() {
+  rqt_aidin2::msgaidin2 msgDo;
+  
+  msgDo.doFlag = true;
+  if (autoOn==true)
+    msgDo.autoFlag = true;
+  else if (autoOn==false)
+    msgDo.autoFlag = false;
 
+  ROS_INFO("auto : %s", msgDo.autoFlag ? "true" : "false");
+  ROS_INFO("Do : %s", msgDo.doFlag ? "true" : "false");
+
+  do_pub.publish(msgDo);
+}
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -551,7 +573,12 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(on_quitButton_clicked())  );
     QObject::connect(ui_.pushButton_5, SIGNAL(clicked()),
             this, SLOT(on_enterButton_clicked())  );
+    QObject::connect(ui_.checkBox_2, SIGNAL(toggled(bool )),
+            this, SLOT(onChecked_2(bool ))  );
+    QObject::connect(ui_.pushButton_6, SIGNAL(clicked()),
+            this, SLOT(on_doButton_clicked())  );
     //"this" means source code, and in this case, it means "aidinPlugin".
+
 }
 
 void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -568,6 +595,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("gaitcommand", 1);
   goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("goalcommand", 4);
+  do_pub = nh.advertise<rqt_aidin2::msgaidin2>("docommand", 4);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates

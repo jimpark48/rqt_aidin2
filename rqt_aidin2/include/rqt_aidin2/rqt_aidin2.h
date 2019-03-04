@@ -51,6 +51,7 @@ private:
   ros::Publisher test_pub;
   ros::Publisher gait_pub;
   ros::Publisher goal_pub;
+  ros::Publisher do_pub;
 
   Q_SIGNALS:
     void clicked();
@@ -66,8 +67,10 @@ private slots:
   void on_pushButton_3_clicked1();
   void on_pushButton_3_clicked2();
   void onChecked(bool checked);
+  void onChecked_2(bool checked);
   void on_quitButton_clicked();
   void on_enterButton_clicked();
+  void on_doButton_clicked();
 };
 }  // namespace rqt_aidin2
 #endif  // RQT_AIDIN_RQT_AIDIN2_H
