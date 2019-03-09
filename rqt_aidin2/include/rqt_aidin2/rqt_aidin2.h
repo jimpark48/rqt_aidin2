@@ -52,12 +52,17 @@ private:
   ros::Publisher gait_pub;
   ros::Publisher goal_pub;
   ros::Publisher do_pub;
+  ros::Publisher Camera_pub;
 
   Q_SIGNALS:
     void clicked();
     void clicked(const QString &qstr2);
     void clicked(const QModelIndex &index);
     void toggled(bool checked);
+    //void valueChanged(int value);
+    void textChanged(const QString &text);
+    void sliderMoved(int value);
+
 private slots:
   void on_pushButton_clicked1(); //반드시 slots 안에 정의할 것
   void on_pushButton_clicked2();
@@ -71,6 +76,10 @@ private slots:
   void on_quitButton_clicked();
   void on_enterButton_clicked();
   void on_doButton_clicked();
+  void on_Camera_clicked();
+  //void on_Camera_slider_changed(int value);
+  void on_Camera_slider_text(const QString &text);
+  void on_Camera_slider_move(int value);
 };
 }  // namespace rqt_aidin2
 #endif  // RQT_AIDIN_RQT_AIDIN2_H
