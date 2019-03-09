@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <thread>
 #include <string.h>
+#include "rqt_aidin2/ui_rqt_aidin2.h"
 
 #include <rqt_aidin2/msgaidin2.h>
 
@@ -20,14 +21,18 @@ aidinPlugin2::aidinPlugin2()
 }
 
 //global variables
-static QString qstr1;
-static QString qstr2;
-static QStringList list2;
-static char *message1;
-static char *plotstring = (char*)malloc(30);
-static int commandcount;
-static int count;
-static int checkedcount;
+QString qstr1;
+QString qstr2;
+QStringList list2;
+char *message1;
+char *plotstring = (char*)malloc(30);
+int commandcount;
+int count;
+int checkedcount;
+//slider variables
+QString Camera;
+double slider;
+rqt_aidin2::msgaidin2 msgAngle;
 
 bool autoOn = false;//YH
 
@@ -106,46 +111,34 @@ void aidinPlugin2::on_pushButton_clicked1()
       token = strtok(message1, s1);
       message1 = strtok(NULL, s1);
       if(strcmp(message1, "Foottrajectory") == 0) {
-          ros::Rate loop_rate(10);
+        ros::Rate loop_rate(10);
 
-          int num = 1;
-          //while(count2 < 5) {
-            //ROS_INFO("%s", message1);
-            ROS_INFO("on");
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-         //   loop_rate.sleep();
-          //  count2++;
-          //}
+        int num = 1;
+        
+        //ROS_INFO("%s", message1);
+        ROS_INFO("on");
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
+        rqt_aidin2_pub.publish(msg); 
       }
       else if(strcmp(message1, "Footprint") == 0) {
-          ros::Rate loop_rate(10);
+        ros::Rate loop_rate(10);
 
-          int num = 3;
-          //while(count2 < 5) {
-            //ROS_INFO("%s", message1);
-            ROS_INFO("on");
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-          //  loop_rate.sleep();
-          //  count2++;
-          //}
+        int num = 3;
+        //ROS_INFO("%s", message1);
+        ROS_INFO("on");
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
+        rqt_aidin2_pub.publish(msg);
       }
       else if(strcmp(message1, "Cobtrajectory") == 0) {
-          ros::Rate loop_rate(10);
+        ros::Rate loop_rate(10);
 
-          int num = 5;
-          //while(count2 < 5) {
-            //ROS_INFO("%s", message1);
-            ROS_INFO("on");
-            rqt_aidin2::msgaidin2 msg;
-            msg.data = num;
-            rqt_aidin2_pub.publish(msg);
-          //  loop_rate.sleep();
-           // count2++;
-          //}
+        int num = 5;
+        //ROS_INFO("%s", message1);
+        ROS_INFO("on");
+        rqt_aidin2::msgaidin2 msg;
+        msg.data = num;
       }
     }
     else {
@@ -166,52 +159,36 @@ void aidinPlugin2::on_pushButton_clicked2()
 
   //ROS_INFO("%s", message1);
 
-  //int count2 = 0;
-
   if(strcmp(message1, "Idle") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 0;
-   // while(count2 < 5) {
-      ROS_INFO("%s", message1);
-      rqt_aidin2::msgaidin2 msg;
-      msg.data = num;
-      //msg.a = 1.0;
-      //msg.b = 0.6
-      gait_pub.publish(msg);
-    //  loop_rate.sleep();
-    //  count2++;
-    //}
+    ROS_INFO("%s", message1);
+    rqt_aidin2::msgaidin2 msg;
+    msg.data = num;
+
+    gait_pub.publish(msg);
+
   }
   if(strcmp(message1, "Walk") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 1;
-   // while(count2 < 5) {
-      ROS_INFO("%s", message1);
-      rqt_aidin2::msgaidin2 msg;
-      msg.data = num;
-      //msg.a = 1.0;
-      //msg.b = 0.6
-      gait_pub.publish(msg);
-    //  loop_rate.sleep();
-    //  count2++;
-    //}
+    ROS_INFO("%s", message1);
+    rqt_aidin2::msgaidin2 msg;
+    msg.data = num;
+
+    gait_pub.publish(msg);
   }
   else if(strcmp(message1, "Trot") == 0) {
     ros::Rate loop_rate(10);
 
     int num = 2;
-    //while(count2 < 5) {
-      ROS_INFO("%s", message1);
-      rqt_aidin2::msgaidin2 msg;
-      msg.data = num;
-      //msg.a = 0.2;
-      //msg.b = 0.2;
-      gait_pub.publish(msg);
-     // loop_rate.sleep();
-    //  count2++;
-    //}
+    ROS_INFO("%s", message1);
+    rqt_aidin2::msgaidin2 msg;
+    msg.data = num;
+
+    gait_pub.publish(msg);
   }
 }
 
@@ -221,7 +198,6 @@ void aidinPlugin2::on_pushButton_2_clicked1()
   QByteArray bytename = qstr1.toLocal8Bit();
   char *message1 = bytename.data();
 
-  //int count2 = 0;
   char *token = NULL;
   char s1[] = " ";
   token = strtok(message1, s1);
@@ -238,14 +214,10 @@ void aidinPlugin2::on_pushButton_2_clicked1()
       ROS_INFO("off");
 
       int num = 0;
-      //while(count2 < 5) {
-        //ROS_INFO("%s", message1);
-        rqt_aidin2::msgaidin2 msg;
-        msg.data = num;
-        rqt_aidin2_pub.publish(msg);
-      //  loop_rate.sleep();
-      //  count2++;
-      //}
+      //ROS_INFO("%s", message1);
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      rqt_aidin2_pub.publish(msg);
     }
     else if(strcmp(message1, "Footprint") == 0) {
       ros::Rate loop_rate(10);
@@ -253,13 +225,9 @@ void aidinPlugin2::on_pushButton_2_clicked1()
       ROS_INFO("off");
 
       int num = 2;
-      //while(count2 < 5) {
-        rqt_aidin2::msgaidin2 msg;
-        msg.data = num;
-        rqt_aidin2_pub.publish(msg);
-     //   loop_rate.sleep();
-      //  count2++;
-      //}
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      rqt_aidin2_pub.publish(msg);
     }
     else if(strcmp(message1, "Cobtrajectory") == 0) {
       ros::Rate loop_rate(10);
@@ -267,13 +235,9 @@ void aidinPlugin2::on_pushButton_2_clicked1()
       ROS_INFO("off");
 
       int num = 4;
-     // while(count2 < 5) {
-        rqt_aidin2::msgaidin2 msg;
-        msg.data = num;
-        rqt_aidin2_pub.publish(msg);
-     //   loop_rate.sleep();
-      //  count2++;
-     // }
+      rqt_aidin2::msgaidin2 msg;
+      msg.data = num;
+      rqt_aidin2_pub.publish(msg);
     }
   }
 }
@@ -574,6 +538,27 @@ void aidinPlugin2::on_doButton_clicked() {
 
   do_pub.publish(msgDo);
 }
+//slider functions
+void aidinPlugin2::on_Camera_clicked() {
+  Camera = ui_.Camera_angle->text();
+  slider = Camera.toDouble();
+
+  msgAngle.x = slider;
+  Camera_pub.publish(msgAngle);
+}
+void aidinPlugin2::on_Camera_slider_move(int value) {
+  slider = value;
+  Camera = QString::number(slider);
+  ui_.Camera_angle->setText(Camera);
+
+  msgAngle.x = slider;
+  Camera_pub.publish(msgAngle);
+}
+void aidinPlugin2::on_Camera_slider_text(const QString &angle_text) {
+  slider = angle_text.toDouble();
+  ui_.Camera_slider->setValue(slider);
+}
+
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -593,6 +578,15 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(onChecked_2(bool ))  );
     QObject::connect(ui_.pushButton_6, SIGNAL(clicked()),
             this, SLOT(on_doButton_clicked())  );
+    //slider functions
+    QObject::connect(ui_.Camera, SIGNAL(clicked()),
+            this, SLOT(on_Camera_clicked())   );
+    /*QObject::connect(ui_.Camera_slider, SIGNAL(valueChanged(int)),
+            this, SLOT(on_Camera_slider_changed(int))   );*/
+    QObject::connect(ui_.Camera_angle, SIGNAL(textChanged(const QString &)),
+            this, SLOT(on_Camera_slider_text(const QString &))  );
+    QObject::connect(ui_.Camera_slider, SIGNAL(sliderMoved(int)),
+            this, SLOT(on_Camera_slider_move(int))  );
     //"this" means source code, and in this case, it means "aidinPlugin".
 
 }
@@ -612,6 +606,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
   goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoal", 4);
   do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
+  Camera_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_camera_angle", 100);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
@@ -636,7 +631,13 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   ui_.listView->setModel(model);
 
   model2 = new QStringListModel(this);
-  
+
+  //slider setting
+  ui_.Camera_slider->setMaximum(360);
+  ui_.Camera_slider->setMinimum(0);
+  ui_.Camera_slider->setValue(80);
+  ui_.Camera_angle->setText("80");
+
   connectionfunc();
 }
 
