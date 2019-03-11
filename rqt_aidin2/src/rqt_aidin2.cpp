@@ -7,6 +7,7 @@
 #include "rqt_aidin2/ui_rqt_aidin2.h"
 
 #include <rqt_aidin2/msgaidin2.h>
+#include <std_msgs/Float32.h>
 
 namespace rqt_aidin2
 {
@@ -32,7 +33,7 @@ int checkedcount;
 //slider variables
 QString Camera;
 double slider;
-rqt_aidin2::msgaidin2 msgAngle;
+std_msgs::Float32 msgAngle;
 
 bool autoOn = false;//YH
 
@@ -543,7 +544,7 @@ void aidinPlugin2::on_Camera_clicked() {
   Camera = ui_.Camera_angle->text();
   slider = Camera.toDouble();
 
-  msgAngle.x = slider;
+  msgAngle.data = slider;
   Camera_pub.publish(msgAngle);
 }
 void aidinPlugin2::on_Camera_slider_move(int value) {
@@ -551,7 +552,7 @@ void aidinPlugin2::on_Camera_slider_move(int value) {
   Camera = QString::number(slider);
   ui_.Camera_angle->setText(Camera);
 
-  msgAngle.x = slider;
+  msgAngle.data = slider;
   Camera_pub.publish(msgAngle);
 }
 void aidinPlugin2::on_Camera_slider_text(const QString &angle_text) {
@@ -606,7 +607,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
   goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoal", 4);
   do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
-  Camera_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_camera_angle", 100);
+  Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 100);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
