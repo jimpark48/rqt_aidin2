@@ -607,7 +607,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
   goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoal", 4);
   do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
-  Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 100);
+  Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 1);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
