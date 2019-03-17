@@ -50,7 +50,8 @@ private:
   ros::Publisher rqt_aidin2_pub;
   ros::Publisher test_pub;
   ros::Publisher gait_pub;
-  ros::Publisher goal_pub;
+  ros::Publisher goalPos_pub;
+  ros::Publisher goalOri_pub;
   ros::Publisher do_pub;
   ros::Publisher Camera_pub;
 
@@ -74,7 +75,8 @@ private slots:
   void onChecked(bool checked);
   void onChecked_2(bool checked);
   void on_quitButton_clicked();
-  void on_enterButton_clicked();
+  void on_enterGoalPosButton_clicked();
+  void on_enterGoalOriButton_clicked();
   void on_doButton_clicked();
   void on_Camera_clicked();
   //void on_Camera_slider_changed(int value);

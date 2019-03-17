@@ -8,6 +8,7 @@
 
 #include <rqt_aidin2/msgaidin2.h>
 #include <std_msgs/Float32.h>
+#define pi 3.14159265359 
 
 namespace rqt_aidin2
 {
@@ -171,7 +172,7 @@ void aidinPlugin2::on_pushButton_clicked2()
     gait_pub.publish(msg);
 
   }
-  if(strcmp(message1, "Walk") == 0) {      
+  else if(strcmp(message1, "Walk") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 1;
@@ -185,6 +186,16 @@ void aidinPlugin2::on_pushButton_clicked2()
     ros::Rate loop_rate(10);
 
     int num = 2;
+    ROS_INFO("%s", message1);
+    rqt_aidin2::msgaidin2 msg;
+    msg.data = num;
+
+    gait_pub.publish(msg);
+  }
+  else if(strcmp(message1, "Init") == 0) {      
+    ros::Rate loop_rate(10);
+
+    int num = 3;
     ROS_INFO("%s", message1);
     rqt_aidin2::msgaidin2 msg;
     msg.data = num;
@@ -456,7 +467,8 @@ void aidinPlugin2::listView2Plugin(const char* message) {
   else if(strcmp(message, "gait") == 0) {
     list2 << "Idle"
           << "Walk"
-          << "Trot";
+          << "Trot"
+          << "Init";
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
@@ -508,7 +520,7 @@ void aidinPlugin2::on_quitButton_clicked() {
   exit(0);
 }
 
-void aidinPlugin2::on_enterButton_clicked() {
+void aidinPlugin2::on_enterGoalPosButton_clicked() {
   QString qstr_x = ui_.lineEdit_2->text();
   double goal_x = qstr_x.toDouble();
   QString qstr_y = ui_.lineEdit_3->text();
@@ -516,14 +528,31 @@ void aidinPlugin2::on_enterButton_clicked() {
   QString qstr_z = ui_.lineEdit_4->text();
   double goal_z = qstr_z.toDouble();
 
-  rqt_aidin2::msgaidin2 msggoal;
-  msggoal.x = goal_x;
-  msggoal.y = goal_y;
-  msggoal.z = goal_z;
+  rqt_aidin2::msgaidin2 msgGoalPos;
+  msgGoalPos.x = goal_x;
+  msgGoalPos.y = goal_y;
+  msgGoalPos.z = goal_z;
 
   ROS_INFO("goal : %f %f %f", goal_x, goal_y, goal_z);
 
-  goal_pub.publish(msggoal);
+  goalPos_pub.publish(msgGoalPos);
+}
+void aidinPlugin2::on_enterGoalOriButton_clicked() {
+  QString qstr_R = ui_.lineEdit_5->text();
+  double goal_R = qstr_R.toDouble()*pi/180;
+  QString qstr_P = ui_.lineEdit_6->text();
+  double goal_P = qstr_P.toDouble()*pi/180;
+  QString qstr_Y = ui_.lineEdit_7->text();
+  double goal_Y = qstr_Y.toDouble()*pi/180;
+
+  rqt_aidin2::msgaidin2 msgGoalOri;
+  msgGoalOri.x = goal_R;
+  msgGoalOri.y = goal_P;
+  msgGoalOri.z = goal_Y;
+
+  ROS_INFO("goal : %f %f %f", goal_R, goal_P, goal_Y);
+
+  goalOri_pub.publish(msgGoalOri);
 }
 void aidinPlugin2::on_doButton_clicked() {
   rqt_aidin2::msgaidin2 msgDo;
@@ -574,7 +603,9 @@ void aidinPlugin2::connectionfunc()
     QObject::connect(ui_.pushButton_4, SIGNAL(clicked()),
             this, SLOT(on_quitButton_clicked())  );
     QObject::connect(ui_.pushButton_5, SIGNAL(clicked()),
-            this, SLOT(on_enterButton_clicked())  );
+            this, SLOT(on_enterGoalPosButton_clicked())  );
+    QObject::connect(ui_.pushButton_7, SIGNAL(clicked()),
+            this, SLOT(on_enterGoalOriButton_clicked())  );
     QObject::connect(ui_.checkBox_2, SIGNAL(toggled(bool )),
             this, SLOT(onChecked_2(bool ))  );
     QObject::connect(ui_.pushButton_6, SIGNAL(clicked()),
@@ -605,7 +636,8 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
 
   rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
   gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
-  goal_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoal", 4);
+  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoalPos", 4);
+  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoalOri", 4);
   do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
   Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 1);
 
