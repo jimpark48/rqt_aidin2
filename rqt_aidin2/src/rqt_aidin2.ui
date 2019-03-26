@@ -347,6 +347,42 @@
     <string>Enter</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="flat_angle_line">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>330</y>
+     <width>71</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>330</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flat_angle :</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="flat_angle_button">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>330</y>
+     <width>51</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enter</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

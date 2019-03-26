@@ -589,6 +589,18 @@ void aidinPlugin2::on_Camera_slider_text(const QString &angle_text) {
   ui_.Camera_slider->setValue(slider);
 }
 
+QString flat_angle;
+std_msgs::Float32 msgflat;
+double flat_angle2;
+void aidinPlugin2::on_flat_angle_button()
+{
+  flat_angle = ui_.flat_angle_line->text();
+  flat_angle2 = flat_angle.toDouble();
+
+  msgflat.data = flat_angle2;
+  flat_angle_pub.publish(msgflat);
+}
+
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -619,6 +631,8 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(on_Camera_slider_text(const QString &))  );
     QObject::connect(ui_.Camera_slider, SIGNAL(sliderMoved(int)),
             this, SLOT(on_Camera_slider_move(int))  );
+    QObject::connect(ui_.flat_angle_button, SIGNAL(clicked()), 
+            this, SLOT(on_flat_angle_button())  );
     //"this" means source code, and in this case, it means "aidinPlugin".
 
 }
@@ -640,6 +654,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoalOri", 4);
   do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
   Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 1);
+  flat_angle_pub = nh.advertise<std_msgs::Float32>("flat_angle", 1);
 
   // add menu to the listview
   model = new QStringListModel(this); //dynamic memories allocates
