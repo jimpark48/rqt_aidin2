@@ -36,6 +36,8 @@ QString Camera;
 double slider;
 std_msgs::Float32 msgAngle;
 
+std::string robot_change;
+
 bool autoOn = false;//YH
 
 //sum two strings
@@ -414,6 +416,36 @@ void aidinPlugin2::onChecked_2(bool checked) {
     autoOn = false;
   }
 }
+
+void aidinPlugin2::onChecked_aidinvi1(bool checked) {
+  if(checked == true) {
+    robot_change = "/aidinvi1/";
+  }
+  else if(checked == false) {
+    robot_change = "";
+  }
+  rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"command", 100);
+  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGait", 1);
+  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalPos", 4);
+  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalOri", 4);
+  do_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdDo", 4);
+  Camera_pub = nh.advertise<std_msgs::Float32>(robot_change+"rqt_camera_angle", 1);
+}
+void aidinPlugin2::onChecked_aidinvi2(bool checked) {
+  if(checked == true) {
+    robot_change = "/aidinvi2/";
+  }
+  else if(checked == false) {
+    robot_change = "";
+  }
+  rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"command", 100);
+  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGait", 1);
+  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalPos", 4);
+  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalOri", 4);
+  do_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdDo", 4);
+  Camera_pub = nh.advertise<std_msgs::Float32>(robot_change+"rqt_camera_angle", 1);
+}
+
 //add topics of mesg to list2 
 void alphasumstring(int sum, const char *mesg) {
   const char *ram = "/";
@@ -573,7 +605,20 @@ void aidinPlugin2::on_Camera_clicked() {
   Camera = ui_.Camera_angle->text();
   slider = Camera.toDouble();
 
+  std::string check_topic;
+  /*
+  nh.setParam("/robot_name_topic", "/aidinvi1");
+  nh.getParam("/robot_name_topic", check_topic);
+  std::cout << "/robot_name_topic : " << check_topic << std::endl;
+
+  nh.getParam("/aidinvi1/robot_name_topic", check_topic);
+  std::cout << "/aidinvi1/robot_name_topic" << check_topic << std::endl;
+
+  nh.getParam("/aidinvi2/robot_name_topic", check_topic);
+  std::cout << "/aidinvi2/robot_name_topic" << check_topic << std::endl;*/
+
   msgAngle.data = slider;
+  ROS_INFO("camera_angle : %f", slider);
   Camera_pub.publish(msgAngle);
 }
 void aidinPlugin2::on_Camera_slider_move(int value) {
@@ -596,6 +641,18 @@ void aidinPlugin2::on_flat_angle_button()
 {
   flat_angle = ui_.flat_angle_line->text();
   flat_angle2 = flat_angle.toDouble();
+
+  std::string check_topic;
+  /*
+  nh.setParam("/robot_name_topic", "/aidinvi2");
+  nh.getParam("/robot_name_topic", check_topic);
+  std::cout << "/robot_name_topic : " << check_topic << std::endl;
+
+  nh.getParam("/aidinvi1/robot_name_topic", check_topic);
+  std::cout << "/aidinvi1/robot_name_topic : " << check_topic << std::endl;
+
+  nh.getParam("/aidinvi2/robot_name_topic", check_topic);
+  std::cout << "/aidinvi2/robot_name_topic : " << check_topic << std::endl;*/
 
   msgflat.data = flat_angle2;
   flat_angle_pub.publish(msgflat);
@@ -633,6 +690,11 @@ void aidinPlugin2::connectionfunc()
             this, SLOT(on_Camera_slider_move(int))  );
     QObject::connect(ui_.flat_angle_button, SIGNAL(clicked()), 
             this, SLOT(on_flat_angle_button())  );
+
+    QObject::connect(ui_.aidinvi1, SIGNAL(toggled(bool )),
+            this, SLOT(onChecked_aidinvi1(bool )) );
+    QObject::connect(ui_.aidinvi2, SIGNAL(toggled(bool )),
+            this, SLOT(onChecked_aidinvi2(bool )) );
     //"this" means source code, and in this case, it means "aidinPlugin".
 
 }
@@ -648,12 +710,12 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   // add widget to the user interface
   context.addWidget(widget_);
 
-  rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("command", 100);
-  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGait", 1);
-  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoalPos", 4);
-  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdGoalOri", 4);
-  do_pub = nh.advertise<rqt_aidin2::msgaidin2>("rqt_cmdDo", 4);
-  Camera_pub = nh.advertise<std_msgs::Float32>("rqt_camera_angle", 1);
+  rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"command", 100);
+  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGait", 1);
+  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalPos", 4);
+  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdGoalOri", 4);
+  do_pub = nh.advertise<rqt_aidin2::msgaidin2>(robot_change+"rqt_cmdDo", 4);
+  Camera_pub = nh.advertise<std_msgs::Float32>(robot_change+"rqt_camera_angle", 1);
   flat_angle_pub = nh.advertise<std_msgs::Float32>("flat_angle", 1);
 
   // add menu to the listview
@@ -662,6 +724,8 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   list  << "eigentransmit eigentransmit.launch" 
         << "rqt_gui_test rqt_gui_test_publisher" 
         << "aidinvi walking_vis.launch"
+        << "ros2pcl ros2pcl"
+        << "ros2pcl flat2"
         << "rviz rviz" //set the menu list
         << "command: gait"
         << "plot: /gazebo/aidinvi_footpos"

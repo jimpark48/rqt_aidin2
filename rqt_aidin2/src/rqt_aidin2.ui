@@ -383,6 +383,32 @@
     <string>Enter</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="aidinvi2">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>370</y>
+     <width>92</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>aidinvi2</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="aidinvi1">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>370</y>
+     <width>92</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>aidinvi1</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

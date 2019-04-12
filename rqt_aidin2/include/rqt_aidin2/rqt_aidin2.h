@@ -54,6 +54,7 @@ private:
   ros::Publisher goalOri_pub;
   ros::Publisher do_pub;
   ros::Publisher Camera_pub;
+  ros::Publisher flat_angle_pub;
 
   Q_SIGNALS:
     void clicked();
@@ -82,6 +83,9 @@ private slots:
   //void on_Camera_slider_changed(int value);
   void on_Camera_slider_text(const QString &text);
   void on_Camera_slider_move(int value);
+  void on_flat_angle_button();
+  void onChecked_aidinvi1(bool checked);
+  void onChecked_aidinvi2(bool checked);
 };
 }  // namespace rqt_aidin2
 #endif  // RQT_AIDIN_RQT_AIDIN2_H
