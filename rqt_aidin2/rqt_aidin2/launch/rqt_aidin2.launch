@@ -1,6 +1,0 @@
-<launch>
-  <node name="rqt_aidin2"
-	pkg = "rqt_plot"
-	type = "rqt_plot"
-	args = "/gazebo/aidinvi_footpos /gazebo/aidinvi_jointt /aidinvi_actt /aidinvi_actp" />
-</launch>
