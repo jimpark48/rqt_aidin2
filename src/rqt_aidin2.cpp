@@ -106,12 +106,18 @@ void aidinPlugin2::on_pushButton_clicked1()
     int value = comparestring(message1, launchmsg);
     //if value is 10000, message1 doesn't launch file
     if(value != 10000) {
+      /*const char *testmsg = "aidinvi walking_vis_test.launch";
+      int index = comparestring(message1, testmsg);
+      if(index != 10000) {
+        ROS_INFO("robots_auto");
+        system("gnome-terminal -e 'rosrun aidinvi robots_auto --screen'");
+      } */
       const char *message2 = "gnome-terminal -e 'roslaunch "; //new terminal
       const char *message3 = " --screen'";
       //const char *message3 = "'";
       const char *message4 = sumstring(message2, message1);
       message4 = sumstring(message4, message3);
-      //ROS_INFO("%s", message4);
+      ROS_INFO("%s", message4);
       system(message4);
 
     }
@@ -749,6 +755,11 @@ void aidinPlugin2::on_flat_angle_button()
   flat_angle_pub.publish(msgflat);
 }
 
+void msgCallbackrobotnumber(const std_msgs::Float32::ConstPtr &msg) {
+  int numbering = msg->data;
+  robotnum = numbering;
+}
+
 //set initial connection of gui and functions
 void aidinPlugin2::connectionfunc()
 {
@@ -817,6 +828,8 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   Camera_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_camera_angle", 1);
   flat_angle_pub = nh.advertise<std_msgs::Float32>("flat_angle", 1);
 
+  ros::Subscriber robotnumber_sub = nh.subscribe("/robotnumber", 1, msgCallbackrobotnumber);
+
   msgAngle.robot.resize(robotnum+1);
   msg.robot.resize(robotnum+1);
 
@@ -825,6 +838,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   QStringList list; //
   list  << "aidinvi walking_vis.launch"
         << "aidinvi walking_vis_test.launch"
+        << "aidinvi robots_auto"
         << "ros2pcl ros2pcl"
         << "ros2pcl flat2"
         << "rviz rviz" //set the menu list
