@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <thread>
 #include <string.h>
-#include "rqt_aidin2/ui_rqt_aidin2.h"
+//#include "rqt_aidin2/ui_rqt_aidin2.h"
 
-#include <rqt_aidin2/msgaidin2.h>
+#include <aidin_msgs/RQT.h>
 #include <std_msgs/Float32.h>
 #define pi 3.14159265359 
 
@@ -35,8 +35,8 @@ int checkedcount;
 QString Camera;
 double slider;
 //std_msgs::Float32 msgAngle;
-rqt_aidin2::msgaidin2 msgAngle;
-rqt_aidin2::msgaidin2 msg;
+aidin_msgs::RQT msgAngle;
+aidin_msgs::RQT msg;
 //rqt_aidin2::msgaidin2 msgGoalPos;
 //rqt_aidin2::msgaidin2 msgGoalOri;
 //rqt_aidin2::msgaidin2 msgDo;
@@ -611,7 +611,7 @@ void aidinPlugin2::on_enterGoalPosButton_clicked() {
   QString qstr_z = ui_.lineEdit_4->text();
   double goal_z = qstr_z.toDouble();
 
-  rqt_aidin2::msgaidin2 msgGoalPos;
+  aidin_msgs::RQT msgGoalPos;
   msgGoalPos.robot.resize(robotnum+1);
   msgGoalPos.x = goal_x;
   msgGoalPos.y = goal_y;
@@ -637,7 +637,7 @@ void aidinPlugin2::on_enterGoalOriButton_clicked() {
   QString qstr_Y = ui_.lineEdit_7->text();
   double goal_Y = qstr_Y.toDouble()*pi/180;
 
-  rqt_aidin2::msgaidin2 msgGoalOri;
+  aidin_msgs::RQT msgGoalOri;
   msgGoalOri.robot.resize(robotnum+1);
   msgGoalOri.x = goal_R;
   msgGoalOri.y = goal_P;
@@ -656,7 +656,7 @@ void aidinPlugin2::on_enterGoalOriButton_clicked() {
   goalOri_pub.publish(msgGoalOri);
 }
 void aidinPlugin2::on_doButton_clicked() {
-  rqt_aidin2::msgaidin2 msgDo;
+  aidin_msgs::RQT msgDo;
   msgDo.robot.resize(robotnum+1);
   
   msgDo.doFlag = true;
@@ -820,13 +820,13 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   Camera_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_camera_angle", 1);
   flat_angle_pub = nh.advertise<std_msgs::Float32>("flat_angle", 1);
 */
-  rqt_aidin2_pub = nh.advertise<rqt_aidin2::msgaidin2>("/command", 100);
-  gait_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_cmdGait", 1);
-  goalPos_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_cmdGoalPos", 4);
-  goalOri_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_cmdGoalOri", 4);
-  do_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_cmdDo", 4);
-  Camera_pub = nh.advertise<rqt_aidin2::msgaidin2>("/rqt_camera_angle", 1);
-  flat_angle_pub = nh.advertise<std_msgs::Float32>("flat_angle", 1);
+  rqt_aidin2_pub = nh.advertise<aidin_msgs::RQT>("/command", 100);
+  gait_pub = nh.advertise<aidin_msgs::RQT>("/rqt_cmdGait", 1);
+  goalPos_pub = nh.advertise<aidin_msgs::RQT>("/rqt_cmdGoalPos", 4);
+  goalOri_pub = nh.advertise<aidin_msgs::RQT>("/rqt_cmdGoalOri", 4);
+  do_pub = nh.advertise<aidin_msgs::RQT>("/rqt_cmdDo", 4);
+  Camera_pub = nh.advertise<aidin_msgs::RQT>("/rqt_camera_angle", 1);
+  flat_angle_pub = nh.advertise<aidin_msgs::RQT>("flat_angle", 1);
 
   ros::Subscriber robotnumber_sub = nh.subscribe("/robotnumber", 1, msgCallbackrobotnumber);
 
