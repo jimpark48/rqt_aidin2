@@ -838,6 +838,7 @@ void aidinPlugin2::initPlugin(qt_gui_cpp::PluginContext& context)
   QStringList list; //
   list  << "aidinvi walking_vis.launch"
         << "aidinvi walking_vis_test.launch"
+        << "aidinvi aidinvi_cam_vision.launch"
         << "aidinvi robots_auto"
         << "ros2pcl ros2pcl"
         << "ros2pcl flat2"
