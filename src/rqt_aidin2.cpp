@@ -8,7 +8,8 @@
 
 #include <aidin_msgs/RQT.h>
 #include <std_msgs/Float32.h>
-#define pi 3.14159265359 
+#define PI 3.14159265359 
+#define PI2 2*3.14159265359 
 
 namespace rqt_aidin2
 {
@@ -631,11 +632,11 @@ void aidinPlugin2::on_enterGoalPosButton_clicked() {
 }
 void aidinPlugin2::on_enterGoalOriButton_clicked() {
   QString qstr_R = ui_.lineEdit_5->text();
-  double goal_R = qstr_R.toDouble()*pi/180;
+  double goal_R = qstr_R.toDouble()*PI2/360;
   QString qstr_P = ui_.lineEdit_6->text();
-  double goal_P = qstr_P.toDouble()*pi/180;
+  double goal_P = qstr_P.toDouble()*PI2/360;
   QString qstr_Y = ui_.lineEdit_7->text();
-  double goal_Y = qstr_Y.toDouble()*pi/180;
+  double goal_Y = qstr_Y.toDouble()*PI2/360;
 
   aidin_msgs::RQT msgGoalOri;
   msgGoalOri.robot.resize(robotnum+1);
