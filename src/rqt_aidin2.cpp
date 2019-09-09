@@ -209,7 +209,7 @@ void aidinPlugin2::on_pushButton_clicked2()
     gait_pub.publish(msg);
 
   }
-  else if(strcmp(message1, "Walk") == 0) {      
+  else if(strcmp(message1, "Init") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 1;
@@ -219,7 +219,7 @@ void aidinPlugin2::on_pushButton_clicked2()
 
     gait_pub.publish(msg);
   }
-  else if(strcmp(message1, "Trot") == 0) {
+  else if(strcmp(message1, "Walk") == 0) {      
     ros::Rate loop_rate(10);
 
     int num = 2;
@@ -229,7 +229,7 @@ void aidinPlugin2::on_pushButton_clicked2()
 
     gait_pub.publish(msg);
   }
-  else if(strcmp(message1, "Init") == 0) {      
+  else if(strcmp(message1, "Trot") == 0) {
     ros::Rate loop_rate(10);
 
     int num = 3;
@@ -239,6 +239,17 @@ void aidinPlugin2::on_pushButton_clicked2()
 
     gait_pub.publish(msg);
   }
+  else if(strcmp(message1, "StandTrot") == 0) {
+    ros::Rate loop_rate(10);
+
+    int num = 4;
+    ROS_INFO("%s", message1);
+    //rqt_aidin2::msgaidin2 msg;
+    msg.data = num;
+
+    gait_pub.publish(msg);
+  }
+  
 }
 
 void aidinPlugin2::on_pushButton_2_clicked1()
@@ -550,9 +561,10 @@ void aidinPlugin2::listView2Plugin(const char* message) {
   }
   else if(strcmp(message, "gait") == 0) {
     list2 << "Idle"
+          << "Init"
           << "Walk"
           << "Trot"
-          << "Init";
+          << "StandTrot";
     model2->setStringList(list2);
     ui_.listView_2->setModel(model2);
   }
