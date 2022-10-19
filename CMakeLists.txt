@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   rqt_gui_cpp
   std_msgs
   message_generation
-  aidin_msgs
+  # aidin_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -67,6 +67,8 @@ roslint_cpp()
 # )
 add_message_files(
 	FILES
+
+  RQT.msg
 )
 
 
